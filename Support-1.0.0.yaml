@@ -1,0 +1,109 @@
+swagger: '2.0'
+info:
+  x-ibm-name: support
+  title: Support
+  version: 1.0.0
+  description: API de Suporte - Caso Netflix | Trabalho da Disciplina Microservices | Professor Tadeu | FIAP - 5DVP (Grupo 4)
+schemes:
+  - https
+host: $(catalog.host)
+basePath: /api/support
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  clientIdHeader:
+    type: apiKey
+    in: header
+    name: X-IBM-Client-Id
+security:
+  - clientIdHeader: []
+x-ibm-configuration:
+  testable: true
+  enforced: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+      - invoke:
+          target-url: $(target-url)$(request.path)
+  phase: realized
+paths:
+  /status:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+      summary: Obtém o status do serviço - API Support
+      description: Obtém o status do serviço - API Support
+      operationId: getStatus
+  /tickets:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/supportData'
+      summary: Obtém a lista de chamados
+      description: Obtém a lista de chamados
+      operationId: getTickets
+    post:
+      responses:
+        '204':
+          description: 204 OK
+      summary: Abre um chamado
+      description: Abre um chamado
+      operationId: postTickets
+      parameters:
+        - name: dataIn
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/supportData'
+          description: Dados de entrada
+    parameters:
+      - name: Authorization
+        type: string
+        required: true
+        in: header
+        description: Token bearer
+definitions:
+  supportData:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: Código do caso de suporte
+        example: '4'
+      user_id:
+        type: integer
+        format: int32
+        description: Código do usuário
+        example: '1'
+      comments:
+        type: string
+        description: Comentário
+        example: Isso é um chamado de teste
+      create_date:
+        type: string
+        description: Data de criação do caso
+        example: '2021-03-17T03:00:00.000Z'
+      status:
+        type: integer
+        format: int32
+        description: número do status do caso
+        example: '0'
+      user_name:
+        type: string
+        description: Nome do usuário
+        example: lucas
+    required:
+      - user_id
+      - comments
+      - create_date
+      - status
+      - user_name
+      - id
+tags: []

@@ -1,0 +1,263 @@
+swagger: '2.0'
+info:
+  x-ibm-name: users
+  title: Users
+  version: 1.0.0
+  description: API de Usuários - Caso Netflix | Trabalho da Disciplina Microservices | Professor Tadeu | FIAP - 5DVP (Grupo 4)
+schemes:
+  - https
+host: $(catalog.host)
+basePath: /api/users
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  clientIdHeader:
+    type: apiKey
+    in: header
+    name: X-IBM-Client-Id
+security:
+  - clientIdHeader: []
+    $$label: clientIdHeader
+x-ibm-configuration:
+  testable: true
+  enforced: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+      - invoke:
+          target-url: $(target-url)$(request.path)
+  phase: realized
+paths:
+  /status:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+      summary: Obtém o status do serviço - API Users
+      description: Obtém o status do serviço - API Users
+      operationId: getStatus
+  /:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+      description: Obtém dados do usuário logado
+      summary: Obtém dados do usuário logado
+      operationId: getUsers
+    put:
+      responses:
+        '200':
+          description: 200 OK
+      summary: Altera o nome do usuário
+      operationId: putUsers
+      description: Altera o nome do usuário
+    parameters:
+      - name: Authorization
+        type: string
+        required: true
+        in: header
+        description: Token bearer
+  /authenticate:
+    post:
+      responses:
+        '200':
+          description: 200 OK
+      description: Autentica o usuário
+      operationId: postAuthenticate
+      summary: Autentica o usuário
+  /historics:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+      description: Lista os filmes e séries assistidos
+      summary: Lista os filmes e séries assistidos
+      operationId: getHistorics
+    parameters:
+      - name: Authorization
+        type: string
+        required: true
+        in: header
+        description: Token bearer
+  /likes:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+      summary: Lista os filmes curtidos
+      description: Lista os filmes curtidos
+      operationId: getLikes
+    parameters:
+      - name: Authorization
+        type: string
+        required: true
+        in: header
+        description: Token bearer
+  '/likes/{movieId}':
+    post:
+      responses:
+        '200':
+          description: 200 OK
+      summary: Curte o filme ou série
+      description: Curte o filme ou série
+      operationId: postLikes
+    delete:
+      responses:
+        '200':
+          description: 200 OK
+      summary: Remove a curtida do filme ou série
+      description: Remove a curtida do filme ou série
+      operationId: deleteLikes
+    parameters:
+      - name: movieId
+        type: string
+        required: true
+        in: path
+        description: Codigo do filme
+      - name: Authorization
+        type: string
+        required: true
+        in: header
+        description: Token bearer
+  /futures:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+      summary: Lista os filmes adicionados pra ver no futuro
+      description: Lista os filmes adicionados pra ver no futuro
+      operationId: getFutures
+    parameters:
+      - name: Authorization
+        type: string
+        required: true
+        in: header
+        description: Token bearer
+  '/futures/{movieId}':
+    post:
+      responses:
+        '200':
+          description: 200 OK
+      summary: Adiciona o filme ou série para ser visto no futuro
+      description: Adiciona o filme ou série para ser visto no futuro
+      operationId: postFutures
+    delete:
+      responses:
+        '200':
+          description: 200 OK
+      summary: Remove o filme ou série das vizualizações futura
+      description: Remove o filme ou série das vizualizações futura
+      operationId: deleteFutures
+    parameters:
+      - name: movieId
+        type: string
+        required: true
+        in: path
+        description: Codigo do filme
+      - name: Authorization
+        type: string
+        required: true
+        in: header
+        description: Token bearer
+definitions:
+  loginDataIn:
+    type: object
+    properties:
+      name:
+        type: string
+        example: Teste
+        description: Usuário
+      password:
+        type: string
+        example: 1234
+        description: Senha
+    required:
+      - name
+      - password
+  loginData:
+    type: object
+    properties:
+      token:
+        type: string
+        example: eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTYxNjkzNTQ0NSwiaWF0IjoxNjE2OTM1NDQ1fQ.ilSe-q-kiA0lO-s8QTBaH-Snb6Ea7z4yLfuG_ZJz5V0
+        description: Token JWT
+    required:
+      - token
+  usuarioDataIn:
+    type: object
+    properties:
+      name:
+        type: string
+        example: Novo nome
+        description: Nome do usuário
+    required:
+      - name
+  usuarioData:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        example: 1
+        description: Código do usuário
+      name:
+        type: string
+        example: Meu nome
+        description: Nome do usuário
+    required:
+      - id
+      - name
+  historicsData:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        example: 2
+        description: Código da série ou filme
+      name:
+        type: string
+        example: Gladiador
+        description: Nome da série ou filme
+      detail:
+        type: string
+        example: Maximus é um bravo guerreiro perseguido pelo enciumado filho do imperador. Uma vez defenestrado do cargo apartado violentamente da família ele precisa lutar pela vida como gladiador nas arenas do Império Romano
+        description: Detalhes da série ou filme
+      poster:
+        type: string
+        example: 'https://img.elo7.com.br/product/zoom/1DFAF3F/poster-cartaz-gladiador-poster.jpg'
+        description: Url completa do poster
+    required:
+      - id
+      - poster
+      - detail
+      - name
+  likesData:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        example: 1
+        description: Código da série ou filme
+      name:
+        type: string
+        example: La Casa de Papel
+        description: Nome da série ou filme
+      detail:
+        type: string
+        example: La casa de papel é uma série de televisão de drama policial espanhola criada por Álex Pina. A trama traça dois assaltos muito preparados liderados por um homem conhecido como O Professor um na Casa da Moeda Real da Espanha e outro no Banco Central da Espanha
+        description: Detalhe da série ou filme
+      poster:
+        type: string
+        example: 'https://i.pinimg.com/236x/22/12/3a/22123a335b5bce97ffdcd892f0574238.jpg'
+        description: URL completa da imagem do título
+    required:
+      - id
+      - name
+      - detail
+      - poster
+tags: []

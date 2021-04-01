@@ -1,0 +1,353 @@
+swagger: '2.0'
+info:
+  x-ibm-name: catalog
+  title: Catalog
+  version: 1.0.0
+  description: API de Catálogo de filmes e séries - Caso Netflix | Trabalho da Disciplina Microservices | Professor Tadeu | FIAP - 5DVP (Grupo 4)
+schemes:
+  - https
+host: $(catalog.host)
+basePath: /api/movies
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  clientIdHeader:
+    type: apiKey
+    in: header
+    name: X-IBM-Client-Id
+security:
+  - clientIdHeader: []
+    $$label: clientIdHeader
+x-ibm-configuration:
+  testable: true
+  enforced: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+      - invoke:
+          target-url: $(target-url)$(request.path)
+  phase: realized
+paths:
+  /status:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+      summary: Obtém o status do serviço - API Catalogs
+      description: Obtém o status do serviço - API Catalogs
+      operationId: getStatus
+  /:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/moviesData'
+      parameters:
+        - name: filter
+          type: string
+          required: false
+          in: query
+          description: Filtro genérico para a pesquisa de filmes
+        - name: kind
+          type: string
+          required: false
+          in: query
+          description: Filtro de categoria
+      description: Pesquisa de filmes
+      summary: Pesquisa de filmes
+      operationId: getMovies
+    parameters:
+      - name: Authorization
+        type: string
+        required: true
+        in: header
+        description: Token bearer
+  '/{movieId}':
+    get:
+      responses:
+        '200':
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/movieData'
+      summary: Obtém detalhe de um filme ou série
+      description: Obtém detalhe de um filme ou série
+      operationId: getMoviesId
+      parameters:
+        - name: movieId
+          type: string
+          required: true
+          in: path
+          description: Código do filme
+    parameters:
+      - name: movieId
+        type: string
+        required: true
+        in: path
+        description: Codigo do filme
+      - name: Authorization
+        type: string
+        required: true
+        in: header
+        description: Token bearer
+    put:
+      responses:
+        '204':
+          description: 204 OK
+      summary: Atualiza os dados do filme
+      description: Atualiza os dados do filme
+      operationId: putMovies
+      parameters:
+        - name: dataIn
+          required: false
+          in: body
+          schema:
+            $ref: '#/definitions/movieDataIn'
+          description: ''
+  '/{movieId}/viewed':
+    parameters:
+      - name: movieId
+        type: string
+        required: true
+        in: path
+        description: Codigo do filme
+      - name: Authorization
+        type: string
+        required: true
+        in: header
+        description: Token bearer
+    post:
+      responses:
+        '204':
+          description: 204 OK
+      summary: Incrementa uma visualização no filme ou série
+      description: Incrementa uma visualização no filme ou série
+      operationId: postMoviesIdViewed
+  /mostviews/filme:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/mostviewsData'
+      summary: Lista os filmes mais vistos por categeria
+      description: Lista os filmes mais vistos por categeria
+      operationId: getMostviewsFilme
+    parameters:
+      - name: Authorization
+        type: string
+        required: true
+        in: header
+        description: Token bearer
+  /mostviews/serie:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/mostviewsData'
+      summary: Lista as séries mais vistas por categeria
+      description: Lista as séries mais vistas por categeria
+      operationId: getMostviewsSerie
+    parameters:
+      - name: Authorization
+        type: string
+        required: true
+        in: header
+        description: Token bearer
+  '/tags/{tag}':
+    get:
+      responses:
+        '200':
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/tagData'
+      summary: Lista os filmes e séries de uma determinada tag
+      description: Lista os filmes e séries de uma determinada tag
+      operationId: getTags
+      parameters:
+        - name: kinkd
+          type: string
+          required: false
+          in: query
+          description: Codigo kind
+    parameters:
+      - name: tag
+        type: string
+        required: true
+        in: path
+        description: Codigo da tag
+      - name: Authorization
+        type: string
+        required: true
+        in: header
+        description: Token bearer
+definitions:
+  movieDataIn:
+    type: object
+    properties:
+      name:
+        type: string
+        example: La Casa de Papel 2
+      detail:
+        type: string
+        example: La casa de papel é uma série de televisão de drama policial espanhola criada por Álex Pina. A trama traça dois assaltos muito preparados liderados por um homem conhecido como O Professor um na Casa da Moeda Real da Espanha e outro no Banco Central da Espanha
+      tags:
+        type: string
+        example: Comedia Acao
+      kinds:
+        type: string
+        example: Serie
+  moviesData:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 2
+        name:
+          type: string
+          example: Gladiador
+        detail:
+          type: string
+          example: Maximus é um bravo guerreiro perseguido pelo enciumado filho do imperador. Uma vez defenestrado do cargo apartado violentamente da família ele precisa lutar pela vida como gladiador nas arenas do Império Romano
+        tags:
+          type: string
+          example: Acao Romance
+        kinds:
+          type: string
+          example: Filme
+        views:
+          type: string
+          example: 13
+        poster:
+          type: string
+          example: 'https://img.elo7.com.br/product/zoom/1DFAF3F/poster-cartaz-gladiador-poster.jpg'
+  movieData:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        example: 2
+        description: Código do catálogo
+      name:
+        type: string
+        example: Gladiador
+        description: Nome do título de série ou filme
+      detail:
+        type: string
+        example: Maximus é um bravo guerreiro perseguido pelo enciumado filho do imperador. Uma vez defenestrado do cargo apartado violentamente da família ele precisa lutar pela vida como gladiador nas arenas do Império Romano
+        description: Detalhes da série ou filme
+      tags:
+        type: string
+        example: Acao Romance
+        description: 'Tag para busca. Para mais de uma palavra, dar um espaço entre uma e outra'
+      kinds:
+        type: string
+        example: Filme
+        description: Categoria da série ou filme
+      views:
+        type: string
+        example: 12
+        description: Código  vizualização
+      poster:
+        type: string
+        example: 'https://img.elo7.com.br/product/zoom/1DFAF3F/poster-cartaz-gladiador-poster.jpg'
+        description: Url do poster da série ou filme
+      future:
+        type: boolean
+        description: Atributo que sinaliza ver no futuro
+        example: 'true'
+      liked:
+        type: boolean
+        description: Atributo para marcar a série ou filme com um like
+        example: 'true'
+      viewed:
+        type: boolean
+        description: Marcar que você já assistou a sére ou o filme
+        example: 'false'
+    required:
+      - id
+      - name
+      - detail
+      - tags
+      - kinds
+      - views
+      - poster
+      - future
+      - liked
+      - viewed
+  mostviewsData:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 2
+        name:
+          type: string
+          example: Gladiador
+        detail:
+          type: string
+          example: Maximus é um bravo guerreiro perseguido pelo enciumado filho do imperador. Uma vez defenestrado do cargo apartado violentamente da família ele precisa lutar pela vida como gladiador nas arenas do Império Romano
+        tags:
+          type: string
+          example: Acao Romance
+        kinds:
+          type: string
+          example: Filme
+        views:
+          type: string
+          example: 13
+        poster:
+          type: string
+          example: 'https://img.elo7.com.br/product/zoom/1DFAF3F/poster-cartaz-gladiador-poster.jpg'
+  tagData:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        example: 23
+        description: Código do catálogo
+      name:
+        type: string
+        example: Como Defender um Assassino
+        description: Nome da série ou filme
+      detail:
+        type: string
+        example: Michaela Wes Laurel e Patrick são ambiciosos calouros de Direito da prestigiada academia East Coast Law School onde apenas os melhores alunos podem participar de casos reais. Eles competem entre si para conseguir a atenção da carismática e sedutora Professora Annalise DeWitt (Viola Davis) na aula de Direito Criminal 1 também conhecida como Como Se Livrar de Um Assassinato.
+        description: Detalhes do catálogo
+      tags:
+        type: string
+        example: Acao
+        description: Tag para busca
+      kinds:
+        type: string
+        example: Serie
+        description: Categorias
+      views:
+        type: string
+        example: 0
+        description: Quantidade de vizualizacoes
+      poster:
+        type: string
+        example: 'https://media.fstatic.com/ainvwVKH36bpHZQFlj7zjjn3DfQ=/290x478/smart/media/movies/covers/2017/10/81jrPm-5shL._SL1500_.jpg'
+        description: Url do poster
+    required:
+      - id
+      - name
+      - detail
+      - tags
+      - kinds
+      - views
+      - poster
+tags: []
