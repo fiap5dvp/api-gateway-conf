@@ -2,7 +2,7 @@
 
 Utilizamos o Api Connect da IBM para fazer o papel de Gateway e termos os recursos de segurança, portal do desenvolvedor, analytics, monetização e ciclo de vida das API's.
 
-O serviço é free para até 50K de chamadas/mês. Isso atende muito bem para nosso projeto. Mais informações sobre IBM Cloud - [https://cloud.ibm.com/catalog/services/api-connect#about] (https://cloud.ibm.com/catalog/services/api-connect#about).
+O serviço é free para até 50K de chamadas/mês. Isso atende muito bem para nosso projeto. Mais informações sobre IBM Cloud - [https://cloud.ibm.com/catalog/services/api-connect#about](https://cloud.ibm.com/catalog/services/api-connect#about).
 
 ## Sobre as API's e como utilizar
 
@@ -20,6 +20,6 @@ Você precisa passar uma api-key no header, além de um token bearer como Author
 
 ## Developer Portal
 
-Mais informações sobre os detalhes das API's, estrutura de dados e exemplos de payloads para chamar, assim como executar testes, você pode fazer diretamente no [portal do desenvolvedor] (https://fiap-marciomdantascombr-dev.developer.us.apiconnect.ibmcloud.com).
+Mais informações sobre os detalhes das API's, estrutura de dados e exemplos de payloads para chamar, assim como executar testes, você pode fazer diretamente no [portal do desenvolvedor](https://fiap-marciomdantascombr-dev.developer.us.apiconnect.ibmcloud.com).
 
 Este portal também permite de forma self-service com que qualquer pessoa crie uma conta, faça login, depois veja as API's, crie um app que por sua vez com este app pode assinar alguma API com algum plano de 100 chamadas por segundo ou por hora e assim consiga utilizar as API's de forma independente, tornando o processo totalmente seguro no que tange ao recebimento das api-keys para uso.
