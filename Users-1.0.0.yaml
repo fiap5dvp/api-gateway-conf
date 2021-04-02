@@ -1,6 +1,5 @@
 swagger: '2.0'
 info:
-  x-ibm-name: users
   title: Users
   version: 1.0.0
   description: API de Usuários - Caso Netflix | Trabalho da Disciplina Microservices | Professor Tadeu | FIAP - 5DVP (Grupo 4)
@@ -20,16 +19,6 @@ securityDefinitions:
 security:
   - clientIdHeader: []
     $$label: clientIdHeader
-x-ibm-configuration:
-  testable: true
-  enforced: true
-  cors:
-    enabled: true
-  assembly:
-    execute:
-      - invoke:
-          target-url: $(target-url)$(request.path)
-  phase: realized
 paths:
   /status:
     get:
